@@ -1,6 +1,7 @@
 ﻿using CustomerAPI.Interfaces;
 using CustomerAPI.Models;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
 
 namespace CustomerAPI.Controllers
 {
@@ -14,6 +15,7 @@ namespace CustomerAPI.Controllers
         public CustomerController(ICustomerService customerService)
         {
             _customerService = customerService;
+
         }
 
         [HttpGet("GetAllCustomers")]
@@ -31,6 +33,31 @@ namespace CustomerAPI.Controllers
                 return NotFound();
             }
             return Ok(customer);
+        }
+
+        [HttpPost("AddCustomer")]
+        public ActionResult AddCustomer(CustomerDto customerDto)
+        {
+            _customerService.AddCustomer(customerDto);
+            return CreatedAtAction(nameof(GetCustomerById), new { id = customerDto.Id }, customerDto);
+        }
+
+        [HttpPut("UpdateCustomerById/{id}")]
+        public ActionResult UpdateCustomer(int id, CustomerDto customerDto)
+        {
+            if (id != customerDto.Id)
+            {
+                return BadRequest();
+            }
+            _customerService.UpdateCustomer(customerDto);
+            return NoContent();
+        }
+
+        [HttpDelete("DeleteCustomerById/{id}")]
+        public IActionResult DeleteCustomer(int id)
+        {
+            _customerService.DeleteCustomer(id);
+            return NoContent();
         }
     }
 }

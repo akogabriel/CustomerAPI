@@ -1,6 +1,8 @@
 
+using CustomerAPI.Data;
 using CustomerAPI.Interfaces;
 using CustomerAPI.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace CustomerAPI
 {
@@ -13,8 +15,11 @@ namespace CustomerAPI
             // Add services to the container.
 
             builder.Services.AddControllers();
-            builder.Services.AddSingleton<ICustomerRepo, CustomerRepo>();
+            builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
             builder.Services.AddScoped<ICustomerService, CustomerService>();
+
+            builder.Services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase("CustomerDb"));
+            builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
